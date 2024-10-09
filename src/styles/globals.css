@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: Arial, Helvetica, sans-serif; /* Fuente general */
+}
+
+@layer base {
+  :root {
+    --background: #ffffff; /* Blanco */
+    --foreground: #000000; /* Negro */
+    --card: #f9f9f9; /* Fondo claro para tarjetas */
+    --card-foreground: #333333; /* Texto oscuro en las tarjetas */
+    --popover: #f9f9f9; /* Fondo claro para popovers */
+    --popover-foreground: #333333; /* Texto oscuro para popovers */
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Arial', sans-serif;  /* Asegurar que los encabezados usen la misma fuente */
+    color: var(--foreground); /* Color de texto asegurado */
+  }
+
+  p {
+    color: var(--foreground); /* Color de párrafos */
+  }
+
+  a {
+    color: #1a73e8; /* Color de enlaces (azul por defecto) */
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: #174ea6; /* Enlaces más oscuros al pasar el mouse */
+  }
+
+  button {
+    transition: all 0.3s ease;
+    
+  }
+  
+  input:focus {
+    border-color: #333;
+    outline: none;
+  }
+
+  .password-field {
+    position: relative;
+  }
+  
+  .password-field button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  
+}
