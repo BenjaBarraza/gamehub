@@ -60,7 +60,10 @@ export default function Home() {
             Tu destino definitivo para obtener información, reseñas y noticias sobre juegos.
           </p>
           <div className="mt-6 space-x-4">
-            <button className="px-6 py-3 bg-gray-900 text-white rounded-full shadow-lg hover:shadow-xl transition-shadow">
+
+            <button className="px-6 py-3 bg-gray-900 text-white rounded-full shadow-lg hover:shadow-xl transition-shadow"
+            onClick={() => router.push("/games")}
+            >
               Explorar Juegos
             </button>
             

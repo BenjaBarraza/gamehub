@@ -83,6 +83,13 @@ export default function Header() {
                 </button>
               </Link>
             )}
+
+              <Link href="/register/login" passHref>
+                <button className="flex items-center space-x-2 bg-white text-gray-700 px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition-shadow">
+                  <User className="h-5 w-5 text-gray-700" />
+                  <span>acceso</span>
+                </button>
+              </Link>
           </div>
         </div>
       </header>
