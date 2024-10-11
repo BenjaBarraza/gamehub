@@ -50,77 +50,7 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-white text-black">
       {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b bg-white backdrop-blur">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <div className="flex items-center space-x-4">
-            <Link href="/" className="flex items-center space-x-2">
-              <Image 
-                src="/logo.ico" 
-                alt="GameHub Logo" 
-                width={32} 
-                height={32} 
-              />
-              <span className="font-bold text-xl">GameHub</span>
-            </Link>
-            <nav className="hidden md:flex items-center space-x-6">
-              <Link href="/games" className="text-gray-700 hover:text-black">Juegos</Link>
-              <button 
-                className="px-6 py-3 bg-white text-gray-700"
-                onClick={() => router.push("/noticias")}
-              >
-                Noticias
-              </button>
-              <Link href="/reviews" className="text-gray-700 hover:text-black">Reseñas</Link>
-            </nav>
-          </div>
-
-          {/* Botón Menú y Búsqueda */}
-          <div className="flex items-center space-x-4">
-            <form className="relative flex items-center">
-              <Search className="absolute left-3 h-5 w-5 text-gray-500" />
-              <input 
-                type="search" 
-                placeholder="Search games..." 
-                className="pl-10 py-2 w-64 border rounded-full focus:outline-none focus:ring-2 focus:ring-gray-300" 
-              />
-            </form>
-            {user ? (
-            <div className="relative">
-              <button 
-                onClick={toggleMenu} 
-                className="flex items-center space-x-2 bg-white text-gray-700 px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition-shadow"
-              >
-                <User className="h-5 w-5 text-gray-700" />
-                <span>{user.name}</span> {/* Usa user.name para mostrar el nombre */}
-              </button>
-              {menuOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg">
-                  <button
-                    onClick={() => {
-                      logout(); // Llama a logout desde el contexto
-                      setMenuOpen(false); // Cierra el menú después de cerrar sesión
-                      router.push("/"); // Redirige después de cerrar sesión
-                    }}
-                    className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
-                  >
-                    Cerrar sesión
-                  </button>
-                </div>
-              )}
-            </div>
-            ) : (
-              <Link href="/register/register" passHref>
-                <button className="flex items-center space-x-2 bg-white text-gray-700 px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition-shadow">
-                  <User className="h-5 w-5 text-gray-700" />
-                  <span>Registrarse</span>
-                </button>
-              </Link>
-            )}
-          </div>
-        </div>
-      </header>
       
-    
       {/* Main Content */}
       <main className="flex-1">
         {/* Sección de Bienvenida */}
@@ -201,24 +131,6 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-white border-t py-6">
-        <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <Image src="/logo.ico" 
-              alt="GameHub Logo" 
-              width={32} 
-              height={32} 
-            />
-            <p className="text-gray-600">&copy; 2024 GameHub. All rights reserved.</p>
-          </div>
-          <nav className="flex space-x-4 mt-4 md:mt-0">
-            <Link href="/about" className="text-gray-600 hover:text-black">Sobre nosotros</Link>
-            <Link href="/contact" className="text-gray-600 hover:text-black">Contacto</Link>
-            <Link href="/privacy" className="text-gray-600 hover:text-black">Privacidad</Link>
-            <Link href="/terms" className="text-gray-600 hover:text-black">Terminos</Link>
-          </nav>
-        </div>
-      </footer>
     </div>
   );
 }

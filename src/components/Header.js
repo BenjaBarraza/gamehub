@@ -18,43 +18,55 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white backdrop-blur">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <div className="flex items-center space-x-4">
-          <Link href="/" className="flex items-center space-x-2">
-            <Image src="/logo.ico" alt="GameHub Logo" width={32} height={32} />
-            <span className="font-bold text-xl">GameHub</span>
-          </Link>
-          <nav className="hidden md:flex items-center space-x-6">
-            <Link href="/games" className="text-gray-700 hover:text-black">Juegos</Link>
-            <Link href="/noticias" className="text-gray-700 hover:text-black">Noticias</Link>
-            <Link href="/reviews" className="text-gray-700 hover:text-black">Reseñas</Link>
-          </nav>
-        </div>
-        <div className="flex items-center space-x-4">
-          <form className="relative flex items-center">
-            <Search className="absolute left-3 h-5 w-5 text-gray-500" />
-            <input
-              type="search"
-              placeholder="Search games..."
-              className="pl-10 py-2 w-64 border rounded-full focus:outline-none focus:ring-2 focus:ring-gray-300"
-            />
-          </form>
-          {username ? (
+        <div className="container mx-auto flex h-16 items-center justify-between px-4">
+          <div className="flex items-center space-x-4">
+            <Link href="/" className="flex items-center space-x-2">
+              <Image 
+                src="/logo.ico" 
+                alt="GameHub Logo" 
+                width={32} 
+                height={32} 
+              />
+              <span className="font-bold text-xl">GameHub</span>
+            </Link>
+            <nav className="hidden md:flex items-center space-x-6">
+              <Link href="/games" className="text-gray-700 hover:text-black">Juegos</Link>
+              <button 
+                className="px-6 py-3 bg-white text-gray-700"
+                onClick={() => router.push("/noticias")}
+              >
+                Noticias
+              </button>
+              <Link href="/reviews" className="text-gray-700 hover:text-black">Reseñas</Link>
+            </nav>
+          </div>
+
+          {/* Botón Menú y Búsqueda */}
+          <div className="flex items-center space-x-4">
+            <form className="relative flex items-center">
+              <Search className="absolute left-3 h-5 w-5 text-gray-500" />
+              <input 
+                type="search" 
+                placeholder="Search games..." 
+                className="pl-10 py-2 w-64 border rounded-full focus:outline-none focus:ring-2 focus:ring-gray-300" 
+              />
+            </form>
+            {user ? (
             <div className="relative">
-              <button
-                onClick={toggleMenu}
+              <button 
+                onClick={toggleMenu} 
                 className="flex items-center space-x-2 bg-white text-gray-700 px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition-shadow"
               >
                 <User className="h-5 w-5 text-gray-700" />
-                <span>{username}</span>
+                <span>{user.name}</span> {/* Usa user.name para mostrar el nombre */}
               </button>
               {menuOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg">
                   <button
                     onClick={() => {
-                      logout();
-                      setMenuOpen(false);
-                      router.push("/");
+                      logout(); // Llama a logout desde el contexto
+                      setMenuOpen(false); // Cierra el menú después de cerrar sesión
+                      router.push("/"); // Redirige después de cerrar sesión
                     }}
                     className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
                   >
@@ -63,16 +75,16 @@ export default function Header() {
                 </div>
               )}
             </div>
-          ) : (
-            <Link href="/register/register">
-              <button className="flex items-center space-x-2 bg-white text-gray-700 px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition-shadow">
-                <User className="h-5 w-5 text-gray-700" />
-                <span>Registrarse</span>
-              </button>
-            </Link>
-          )}
+            ) : (
+              <Link href="/register/register" passHref>
+                <button className="flex items-center space-x-2 bg-white text-gray-700 px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition-shadow">
+                  <User className="h-5 w-5 text-gray-700" />
+                  <span>Registrarse</span>
+                </button>
+              </Link>
+            )}
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
   );
 }
