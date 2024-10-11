@@ -14,8 +14,8 @@ export default function RegisterPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false); // Estado para alternar visibilidad de password
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // Estado para alternar visibilidad de confirmPassword
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const router = useRouter();
 
   const handleSubmit = (e) => {
@@ -24,24 +24,17 @@ export default function RegisterPage() {
     if (username && email && password && confirmPassword && password === confirmPassword) {
       const newUser = { name: username, email, password };
   
-      // Verifica si ya hay usuarios en localStorage
       const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
-      
-      // Añade el nuevo usuario a la lista
       storedUsers.push(newUser);
-      
-      // Actualiza la lista de usuarios en localStorage
       localStorage.setItem("users", JSON.stringify(storedUsers));
     
-      console.log("Usuario registrado:", newUser); // Verifica que se guardó correctamente
-      router.push('/register/login'); // Redirige al login
+      console.log("Usuario registrado:", newUser);
+      router.push('/register/login');
     } else {
       alert("Por favor, completa todos los campos correctamente.");
     }
   };
   
-  
-
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -51,7 +44,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-green-400 to-blue-500">
+    <div className="flex items-center justify-center min-h-screen bg-white">
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
         <div className="text-center mb-4">
           <div className="flex justify-center mb-4"><Image src="/logo.ico" alt="GameHub Logo" width={128} height={128} />

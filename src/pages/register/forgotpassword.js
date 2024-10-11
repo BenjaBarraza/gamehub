@@ -15,17 +15,18 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-purple-500 to-blue-600 p-4">
-      <Card className="w-full max-w-sm bg-white shadow-lg rounded-lg p-8">
-        <CardHeader className="space-y-2 text-center">
-            <div className="flex justify-center mb-4"><Image src="/logo.ico" alt="GameHub Logo" width={128} height={128} />
+    <div className="flex items-center justify-center min-h-screen bg-white p-4">
+      <div className="w-full max-w-md p-6 bg-white shadow-lg rounded-lg">
+        <div className="space-y-2 text-center">
+          <div className="flex justify-center mb-4">
+            <Image src="/logo.ico" alt="GameHub Logo" width={128} height={128} />
           </div>
-          <h2 className="text-2xl font-bold text-center mb-6">Forgot Your Password?</h2>
-          <CardDescription className="text-gray-600">
+          <h2 className="text-2xl font-bold text-center mb-4">Forgot Your Password?</h2>
+          <p className="text-gray-700">
             Enter your email address and we'll send you a link to reset your password
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+          </p>
+        </div>
+        <div className="mt-6">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email" className="text-gray-700">Email</Label>
@@ -43,7 +44,7 @@ export default function ForgotPasswordPage() {
               <button 
                 type="submit" className="w-full py-2 rounded-lg transition-colors duration-200"
                 style={{
-                  backgroundColor: 'var(--foreground)', // Usar el color negro desde las variables CSS
+                  backgroundColor: 'var(--foreground)',
                   color: 'white',
                 }}
               >
@@ -51,22 +52,21 @@ export default function ForgotPasswordPage() {
               </button>
             </div>
           </form>
-        </CardContent>
-        <CardFooter className="text-center">
+        </div>
+        <div className="text-center mt-4">
           <div className="text-sm text-gray-600">
             Remember your password?{" "}
             <div className="flex justify-between w-full">
-            <Link href="/register/login" className="text-blue-500 hover:underline">
-              Back to login
-            </Link>
-            
-            <Link href="/" className="text-blue-500 hover:underline">
-              Back to Home
-            </Link>
+              <Link href="/register/login" className="text-blue-500 hover:underline">
+                Back to login
+              </Link>
+              <Link href="/" className="text-blue-500 hover:underline">
+                Back to Home
+              </Link>
+            </div>
           </div>
-          </div>
-        </CardFooter>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

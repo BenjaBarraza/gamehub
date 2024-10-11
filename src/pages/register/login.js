@@ -13,37 +13,32 @@ import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false); // Estado para alternar visibilidad
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   const { login } = useAuth();
 
   const handleSubmit = (e) => {
     e.preventDefault();
   
-    // Obtiene la lista de usuarios guardada en localStorage
     const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
-  
-    // Busca un usuario que coincida con el email y la contraseña ingresados
     const foundUser = storedUsers.find(user => user.email === email && user.password === password);
   
     if (foundUser) {
-      login(foundUser); // Guarda el usuario en el contexto
+      login(foundUser);
       console.log("Inicio de sesión exitoso:", foundUser);
-      router.push('/'); // Redirige al usuario a la página principal
+      router.push('/');
     } else {
       console.log("Los datos ingresados no coinciden con ningún usuario registrado.");
       alert("Correo o contraseña incorrectos. Por favor, inténtalo de nuevo.");
     }
   };
   
-  
-
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-purple-500 to-blue-500">
+    <div className="flex items-center justify-center min-h-screen bg-white">
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
         <div className="text-center mb-4">
           <div className="flex justify-center mb-4"> 
@@ -69,7 +64,7 @@ export default function LoginPage() {
             <label className="block text-gray-700 mb-2" htmlFor="password">Password</label>
             <div className="relative">
               <input 
-                type={showPassword ? 'text' : 'password'} // Alterna entre 'text' y 'password'
+                type={showPassword ? 'text' : 'password'}
                 id="password" 
                 placeholder="********" 
                 className="w-full px-3 py-2 border rounded-lg"
