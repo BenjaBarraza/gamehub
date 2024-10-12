@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { fetchGames } from "../services/rawgApi";
 import Link from 'next/link';
+import Image from 'next/image'; // Importa el componente Image
 
 export default function Games() {
   const [games, setGames] = useState([]);
@@ -13,7 +14,6 @@ export default function Games() {
 
     loadGames();
   }, []);
-  
   
   [
     {
@@ -824,7 +824,15 @@ export default function Games() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
         {games.map((game) => (
           <div key={game.id} className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col">
-            <img src={game.background_image} alt={game.name} className="w-full h-40 object-cover" />
+            <Image 
+              src={game.background_image} 
+              alt={game.name} 
+              width={400} 
+              height={160} 
+              className="w-full h-40 object-cover" 
+              placeholder="blur" // Opcional: placeholder para mejorar el rendimiento
+              blurDataURL="/placeholder.svg" // Opcional: puedes cambiar la URL del placeholder
+            />
             <div className="p-4 flex-grow flex flex-col justify-between">
               <div>
                 <h2 className="text-lg font-semibold mb-2 line-clamp-1">{game.name}</h2>
