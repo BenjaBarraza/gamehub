@@ -2,14 +2,20 @@ import { useEffect, useState } from 'react';
 import { fetchGames } from "../services/rawgApi";
 import Link from 'next/link';
 import Image from 'next/image'; // Importa el componente Image
+import Spinner from '../components/snipper'; // Ajusta la ruta si es necesario
+
+
 
 export default function Games() {
   const [games, setGames] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadGames = async () => {
+      setLoading(true); // Inicia el estado de carga
       const data = await fetchGames();
       setGames(data);
+      setLoading(false); // Finaliza el estado de carga una vez que los datos se han obtenido
     };
 
     loadGames();
@@ -821,6 +827,11 @@ export default function Games() {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-4xl font-bold mb-8 text-center">Catálogo de Juegos</h1>
+
+      {loading ? (
+        <Spinner /> // Muestra el Spinner mientras loading es true
+      ) : (
+
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
         {games.map((game) => (
           <div key={game.id} className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col">
@@ -849,6 +860,7 @@ export default function Games() {
           </div>
         ))}
       </div>
+    )}
     </div>
   );
 }
