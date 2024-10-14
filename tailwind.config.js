@@ -5,6 +5,12 @@ module.exports = {
   ],
   theme: {
     extend: {
+      screen: {
+        'sm': '640px',
+        'md': '768px',
+        'lg': '1024px',
+        'xl': '1280px',
+      },
       colors: {
         background: '#ffffff',  // Fondo blanco
         foreground: '#000000',  // Texto negro

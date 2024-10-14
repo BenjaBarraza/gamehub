@@ -25,7 +25,16 @@ body {
     color: var(--foreground); /* Color de texto asegurado */
   }
 
+  h1 {
+    @apply text-2xl md:text-3xl lg:text-4xl; /* Tamaño responsivo para encabezados */
+  }
+
+  h2 {
+    @apply text-xl md:text-2xl lg:text-3xl; /* Tamaño responsivo para subtítulos */
+  }
+
   p {
+    @apply text-sm md:text-base lg:text-lg; /* Tamaño responsivo para párrafos */
     color: var(--foreground); /* Color de párrafos */
   }
 
@@ -40,12 +49,27 @@ body {
 
   button {
     transition: all 0.3s ease;
-    
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    @apply sm:px-4 sm:py-2 lg:px-6 lg:py-3; /* Ajuste de padding en botones */
   }
   
   input:focus {
     border-color: #333;
     outline: none;
+  }
+
+  .container {
+    @apply mx-auto px-4 md:px-8 lg:px-16; /* Contenedor centralizado con padding responsivo */
+  }
+
+  /* Configuración de flex y grid para tarjetas */
+  .grid-cards {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6;
+  }
+
+  .card {
+    @apply bg-card text-card-foreground p-4 rounded-lg shadow-md;
   }
 
   .password-field {
@@ -61,6 +85,4 @@ body {
     top: 50%;
     transform: translateY(-50%);
   }
-  
-  
 }
