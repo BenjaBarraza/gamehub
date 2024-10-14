@@ -826,12 +826,10 @@ export default function Games() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8 text-center">Catálogo de Juegos</h1>
-
-      {loading ? (
-        <Spinner /> // Muestra el Spinner mientras loading es true
-      ) : (
-
+    <h1 className="text-4xl font-bold mb-8 text-center">Catálogo de Juegos</h1>
+    {loading ? (
+      <Spinner /> // Muestra el Spinner mientras carga
+    ) : (
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
         {games.map((game) => (
           <div key={game.id} className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col">
