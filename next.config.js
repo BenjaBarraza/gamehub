@@ -10,9 +10,9 @@ module.exports = {
       },
       {
         protocol: 'https',
-        hostname: 'via.placeholder.com',
+        hostname:  'api.rawg.io',
         port: '',
-        pathname: '/**',
+        pathname: '/media/games/**',
       },
     ],
   },

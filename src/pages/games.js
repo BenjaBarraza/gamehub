@@ -1,25 +1,32 @@
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router'; // Importa useRouter
 import { fetchGames } from "../services/rawgApi";
 import Link from 'next/link';
 import Image from 'next/image'; // Importa el componente Image
-import Spinner from '../components/snipper'; // Ajusta la ruta si es necesario
+import Spinner from '../components/Snipper'; // Ajusta la ruta si es necesario
 
 
 
 export default function Games() {
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const { search } = router.query; // Obtener el término de búsqueda de la URL
 
   useEffect(() => {
     const loadGames = async () => {
-      setLoading(true); // Inicia el estado de carga
       const data = await fetchGames();
       setGames(data);
-      setLoading(false); // Finaliza el estado de carga una vez que los datos se han obtenido
+      setLoading(false);
     };
 
     loadGames();
   }, []);
+
+  // Filtrar los juegos por nombre si existe un término de búsqueda
+  const filteredGames = search
+    ? games.filter((game) => game.name.toLowerCase().includes(search.toLowerCase()))
+    : games;
   
   [
     {
