@@ -1,7 +1,7 @@
 // components/Header.js
 import Link from "next/link";
 import Image from "next/image";
-import { Search, User } from "lucide-react";
+import { Search, User, Menu, X } from "lucide-react"; // Agregamos el icono de cerrar
 import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/router";
 import { useState, useEffect, useRef } from "react";
@@ -10,18 +10,21 @@ export default function Header() {
   const { user, logout } = useAuth();
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [username, setUsername] = useState(user ? user.name : "");
-  const [searchTerm, setSearchTerm] = useState(""); // Nueva variable para capturar el término de búsqueda
-  const menuRef = useRef(null); 
+  const [searchTerm, setSearchTerm] = useState(""); 
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false); 
+  const menuRef = useRef(null);
 
   const toggleMenu = () => {
     setMenuOpen((prev) => !prev);
   };
 
-  // Redirigir al usuario a la página de juegos con el término de búsqueda
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen((prev) => !prev);
+  };
+
   const handleSearch = (e) => {
     e.preventDefault();
-    router.push(`/games?search=${searchTerm.toLowerCase()}`); // Redirige a la página de juegos con el término de búsqueda en minúsculas
+    router.push(`/games?search=${searchTerm.toLowerCase()}`);
   };
 
   useEffect(() => {
@@ -55,6 +58,11 @@ export default function Header() {
             />
             <span className="font-bold text-xl">GameHub</span>
           </Link>
+        </div>
+
+        {/* Botón Menú y Búsqueda */}
+        <div className="flex items-center space-x-4">
+          {/* Menú para pantallas grandes */}
           <nav className="hidden md:flex items-center space-x-6">
             <Link href="/games" className="text-gray-700 hover:text-black">Juegos</Link>
             <button 
@@ -65,20 +73,25 @@ export default function Header() {
             </button>
             <Link href="/reviews" className="text-gray-700 hover:text-black">Reseñas</Link>
           </nav>
-        </div>
 
-        {/* Botón Menú y Búsqueda */}
-        <div className="flex items-center space-x-4">
           <form className="relative flex items-center" onSubmit={handleSearch}>
             <Search className="absolute left-3 h-5 w-5 text-gray-500" />
             <input 
               type="search" 
               placeholder="Search games..." 
-              className="pl-10 py-2 w-64 border rounded-full focus:outline-none focus:ring-2 focus:ring-gray-300" 
+              className="pl-10 py-2 w-32 md:w-64 border rounded-full focus:outline-none focus:ring-2 focus:ring-gray-300" 
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)} // Almacenar el término de búsqueda
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </form>
+
+          {/* Menú para pantallas pequeñas */}
+          <button
+            className="md:hidden block text-gray-700"
+            onClick={toggleMobileMenu}
+          >
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />} {/* Cambia el ícono */}
+          </button>
 
           {/* Mostrar información si el usuario está logueado */}
           {user ? (
@@ -108,14 +121,14 @@ export default function Header() {
           ) : (
             <>
               <Link href="/register/register" passHref>
-                <button className="flex items-center space-x-2 bg-white text-gray-700 px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition-shadow">
+                <button className="hidden md:flex items-center space-x-2 bg-white text-gray-700 px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition-shadow">
                   <User className="h-5 w-5 text-gray-700" />
                   <span>Registrarse</span>
                 </button>
               </Link>
 
               <Link href="/register/login" passHref>
-                <button className="flex items-center space-x-2 bg-white text-gray-700 px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition-shadow">
+                <button className="hidden md:flex items-center space-x-2 bg-white text-gray-700 px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition-shadow">
                   <User className="h-5 w-5 text-gray-700" />
                   <span>Acceso</span>
                 </button>
@@ -124,6 +137,31 @@ export default function Header() {
           )}
         </div>
       </div>
+
+      {/* Menú desplegable para dispositivos móviles */}
+      {mobileMenuOpen && (
+        <nav className="md:hidden bg-white border-t border-gray-200">
+          <ul className="flex flex-col space-y-2 py-4">
+            <li>
+              <Link href="/games" className="text-gray-700 hover:text-black block px-4">Juegos</Link>
+            </li>
+            <li>
+              <button 
+                className="text-gray-700 block px-4"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  router.push("/noticias");
+                }}
+              >
+                Noticias
+              </button>
+            </li>
+            <li>
+              <Link href="/reviews" className="text-gray-700 hover:text-black block px-4">Reseñas</Link>
+            </li>
+          </ul>
+        </nav>
+      )}
     </header>
   );
 }
