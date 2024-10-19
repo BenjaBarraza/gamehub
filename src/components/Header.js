@@ -28,13 +28,14 @@ export default function Header() {
   };
 
   useEffect(() => {
+    // Cerrar el menú hamburguesa al hacer clic fuera
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setMenuOpen(false);
+        setMobileMenuOpen(false); // Cierra el menú si se hace clic fuera
       }
     };
 
-    if (menuOpen) {
+    if (mobileMenuOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     } else {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -43,7 +44,7 @@ export default function Header() {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [menuOpen]);
+  }, [mobileMenuOpen]);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white backdrop-blur">
@@ -60,17 +61,7 @@ export default function Header() {
           </Link>
         </div>
 
-        {/* Barra de búsqueda fuera del menú hamburguesa */}
-        <form className="relative flex items-center w-full max-w-xs md:max-w-md lg:max-w-lg" onSubmit={handleSearch}>
-          <Search className="absolute left-3 h-5 w-5 text-gray-500" />
-          <input 
-            type="search" 
-            placeholder="Buscar juegos..." 
-            className="pl-10 py-2 w-full border rounded-full focus:outline-none focus:ring-2 focus:ring-gray-300" 
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </form>
+        
 
         {/* Botón Menú y opciones */}
         <div className="flex items-center space-x-4">
@@ -141,11 +132,18 @@ export default function Header() {
 
       {/* Menú desplegable para dispositivos móviles */}
       {mobileMenuOpen && (
-        <div className="absolute inset-x-0 top-16 bg-white z-50 flex flex-col items-center py-4 space-y-4 md:hidden">
-          <Link href="/games" className="text-lg text-gray-700 hover:text-black" onClick={toggleMobileMenu}>
+        <div
+          className="absolute inset-x-0 top-16 bg-white z-50 flex flex-col items-center py-4 space-y-4 md:hidden"
+          ref={menuRef}
+        >
+          <Link
+            href="/games"
+            className="text-lg text-gray-700 hover:text-black"
+            onClick={toggleMobileMenu}
+          >
             Juegos
           </Link>
-          <button 
+          <button
             className="text-lg text-gray-700 hover:text-black"
             onClick={() => {
               setMobileMenuOpen(false);
@@ -154,17 +152,43 @@ export default function Header() {
           >
             Noticias
           </button>
-          <Link href="/reviews" className="text-lg text-gray-700 hover:text-black" onClick={toggleMobileMenu}>
+          <Link
+            href="/reviews"
+            className="text-lg text-gray-700 hover:text-black"
+            onClick={toggleMobileMenu}
+          >
             Reseñas
           </Link>
 
+          {/* Botones de "Registrarse" y "Acceso" visibles en el menú hamburguesa */}
+          {!user && (
+            <>
+              <Link href="/register/register" passHref>
+                <button
+                  className="text-lg text-gray-700 hover:text-black"
+                  onClick={toggleMobileMenu}
+                >
+                  Registrarse
+                </button>
+              </Link>
+              <Link href="/register/login" passHref>
+                <button
+                  className="text-lg text-gray-700 hover:text-black"
+                  onClick={toggleMobileMenu}
+                >
+                  Acceso
+                </button>
+              </Link>
+            </>
+          )}
+
           {user && (
-            <button 
+            <button
               className="text-lg text-gray-700 hover:text-black"
               onClick={() => {
-                logout(); 
+                logout();
                 setMobileMenuOpen(false);
-                router.push("/"); 
+                router.push("/");
               }}
             >
               Cerrar sesión
