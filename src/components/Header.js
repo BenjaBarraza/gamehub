@@ -13,6 +13,7 @@ export default function Header() {
   const [searchTerm, setSearchTerm] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const menuRef = useRef(null);
+  const userMenuRef = useRef(null); // Nueva referencia para el menú de usuario
 
   const toggleMenu = () => {
     setMenuOpen((prev) => !prev);
@@ -28,14 +29,17 @@ export default function Header() {
   };
 
   useEffect(() => {
-    // Cerrar el menú hamburguesa al hacer clic fuera
+    // Cerrar el menú hamburguesa o el menú de usuario al hacer clic fuera
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setMobileMenuOpen(false); // Cierra el menú si se hace clic fuera
+        setMobileMenuOpen(false);
+      }
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+        setMenuOpen(false); // Cerrar el menú de usuario si se hace clic fuera
       }
     };
 
-    if (mobileMenuOpen) {
+    if (mobileMenuOpen || menuOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     } else {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -44,7 +48,7 @@ export default function Header() {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [mobileMenuOpen]);
+  }, [mobileMenuOpen, menuOpen]);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white backdrop-blur">
@@ -61,8 +65,7 @@ export default function Header() {
           </Link>
         </div>
 
-        
-
+       
         {/* Botón Menú y opciones */}
         <div className="flex items-center space-x-4">
           {/* Menú hamburguesa para pantallas pequeñas */}
@@ -87,7 +90,7 @@ export default function Header() {
 
           {/* Mostrar información si el usuario está logueado */}
           {user ? (
-            <div className="relative" ref={menuRef}>
+            <div className="relative" ref={userMenuRef}>
               <button 
                 onClick={toggleMenu} 
                 className="flex items-center space-x-2 bg-white text-gray-700 px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition-shadow"
@@ -99,9 +102,9 @@ export default function Header() {
                 <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg">
                   <button
                     onClick={() => {
-                      logout(); 
-                      setMenuOpen(false); 
-                      router.push("/"); 
+                      logout();
+                      setMenuOpen(false);
+                      router.push("/");
                     }}
                     className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
                   >
@@ -180,19 +183,6 @@ export default function Header() {
                 </button>
               </Link>
             </>
-          )}
-
-          {user && (
-            <button
-              className="text-lg text-gray-700 hover:text-black"
-              onClick={() => {
-                logout();
-                setMobileMenuOpen(false);
-                router.push("/");
-              }}
-            >
-              Cerrar sesión
-            </button>
           )}
         </div>
       )}
