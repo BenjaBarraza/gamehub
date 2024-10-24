@@ -96,86 +96,92 @@ export default function UserProfile() {
       </Card>
 
       <Tabs defaultValue="settings" value={activeTab} onValueChange={handleTabChange} className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="favorites">Juegos Favoritos</TabsTrigger>
-          <TabsTrigger value="reviews">Reseñas Recientes</TabsTrigger>
-          <TabsTrigger value="settings">Configuración</TabsTrigger>
-        </TabsList>
+      <TabsList className="grid w-full grid-cols-3">
+        <TabsTrigger key="favorites" value="favorites">
+          Juegos Favoritos
+        </TabsTrigger>
+        <TabsTrigger key="reviews" value="reviews">
+          Reseñas Recientes
+        </TabsTrigger>
+        <TabsTrigger key="settings" value="settings">
+          Configuración
+        </TabsTrigger>
+      </TabsList>
 
-        <TabsContent value="favorites" className={activeTab === 'favorites' ? '' : 'hidden'}>
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>Juegos Favoritos</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p>Aquí estarán los juegos favoritos del usuario.</p>
-            </CardContent>
-          </Card>
-        </TabsContent>
+      <TabsContent key="favorites-content" value="favorites" className={activeTab === 'favorites' ? '' : 'hidden'}>
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle>Juegos Favoritos</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p>Aquí estarán los juegos favoritos del usuario.</p>
+          </CardContent>
+        </Card>
+      </TabsContent>
 
-        <TabsContent value="reviews" className={activeTab === 'reviews' ? '' : 'hidden'}>
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>Reseñas Recientes</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p>Aquí estarán las reseñas recientes del usuario.</p>
-            </CardContent>
-          </Card>
-        </TabsContent>
+      <TabsContent key="reviews-content" value="reviews" className={activeTab === 'reviews' ? '' : 'hidden'}>
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle>Reseñas Recientes</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p>Aquí estarán las reseñas recientes del usuario.</p>
+          </CardContent>
+        </Card>
+      </TabsContent>
 
-        <TabsContent value="settings" className={activeTab === 'settings' ? '' : 'hidden'}>
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>Subir Imagen de Perfil</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-col items-center">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="mb-4"
-                />
-              </div>
-            </CardContent>
-          </Card>
+      <TabsContent key="settings-content" value="settings" className={activeTab === 'settings' ? '' : 'hidden'}>
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle>Subir Imagen de Perfil</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col items-center">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="mb-4"
+              />
+            </div>
+          </CardContent>
+        </Card>
 
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>Cambiar Contraseña</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-col items-center">
-                <input
-                  type="password"
-                  value={password}
-                  onChange={handlePasswordChange}
-                  placeholder="Nueva contraseña"
-                  className="mb-4 px-4 py-2 border rounded-lg"
-                />
-                <Button onClick={handleSavePassword}>Guardar Contraseña</Button>
-              </div>
-            </CardContent>
-          </Card>
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle>Cambiar Contraseña</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col items-center">
+              <input
+                type="password"
+                value={password}
+                onChange={handlePasswordChange}
+                placeholder="Nueva contraseña"
+                className="mb-4 px-4 py-2 border rounded-lg"
+              />
+              <Button onClick={handleSavePassword}>Guardar Contraseña</Button>
+            </div>
+          </CardContent>
+        </Card>
 
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>Eliminar Cuenta</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-col items-center">
-                <Button
-                  onClick={handleDeleteAccount}
-                  className="bg-red-500 hover:bg-red-700"
-                >
-                  Eliminar Cuenta
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle>Eliminar Cuenta</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col items-center">
+              <Button
+                onClick={handleDeleteAccount}
+                className="bg-red-500 hover:bg-red-700"
+              >
+                Eliminar Cuenta
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </TabsContent>
+    </Tabs>
     </div>
   );
 }
