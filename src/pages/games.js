@@ -11,22 +11,31 @@ export default function Games() {
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const { search } = router.query; // Obtener el término de búsqueda de la URL
+  const { search } = router.query;
 
   useEffect(() => {
     const loadGames = async () => {
-      const data = await fetchGames();
-      setGames(data);
-      setLoading(false);
+      try {
+        const data = await fetchGames();
+        console.log("Datos recibidos:", data); // Verifica que los datos estén llegando
+        setGames(data);
+      } catch (error) {
+        console.error("Error cargando los juegos:", error);
+      } finally {
+        setLoading(false); // Asegura que loading siempre se actualice
+      }
     };
 
     loadGames();
   }, []);
 
-  // Filtrar los juegos por nombre si existe un término de búsqueda
+  // Filtrar los juegos si hay término de búsqueda
   const filteredGames = search
-    ? games.filter((game) => game.name.toLowerCase().includes(search.toLowerCase()))
+    ? games.filter((game) =>
+        game.name.toLowerCase().includes(search.toLowerCase())
+      )
     : games;
+
   
   [
     {
@@ -833,39 +842,42 @@ export default function Games() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-    <h1 className="text-4xl font-bold mb-8 text-center">Catálogo de Juegos</h1>
-    {loading ? (
-      <Spinner /> // Muestra el Spinner mientras carga
-    ) : (
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-        {games.map((game) => (
-          <div key={game.id} className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col">
-            <Image 
-              src={game.background_image} 
-              alt={game.name} 
-              width={400} 
-              height={160} 
-              className="w-full h-40 object-cover" 
-              placeholder="blur" // Opcional: placeholder para mejorar el rendimiento
-              blurDataURL="/placeholder.svg" // Opcional: puedes cambiar la URL del placeholder
-            />
-            <div className="p-4 flex-grow flex flex-col justify-between">
-              <div>
-                <h2 className="text-lg font-semibold mb-2 line-clamp-1">{game.name}</h2>
-                <p className="text-sm text-gray-600 mb-2 line-clamp-2">{game.description || "Descripción no disponible"}</p>
-                <p className="text-xs text-gray-500 mb-1">Plataformas: {game.platforms.map((platform) => platform.platform.name).join(', ')}</p>
-                <p className="text-xs text-gray-500 mb-2">Género: {game.genres.map((genre) => genre.name).join(', ')}</p>
+      <h1 className="text-4xl font-bold mb-8 text-center">Catálogo de Juegos</h1>
+      {loading ? (
+        <Spinner />
+      ) : filteredGames.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+          {filteredGames.map((game) => (
+            <div
+              key={game.id}
+              className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col"
+            >
+              <Image
+                src={game.background_image || "/placeholder.svg"}
+                alt={game.name}
+                width={400}
+                height={160}
+                className="w-full h-40 object-cover"
+              />
+              <div className="p-4 flex-grow flex flex-col justify-between">
+                <h2 className="text-lg font-semibold mb-2 line-clamp-1">
+                  {game.name}
+                </h2>
+                <p className="text-sm text-gray-600 mb-2 line-clamp-2">
+                  {game.description || "Descripción no disponible"}
+                </p>
+                <Link href={`/game/${game.id}`}>
+                  <span className="inline-block w-full bg-blue-500 text-white px-4 py-2 rounded text-center hover:bg-blue-600 transition duration-300">
+                    Más información
+                  </span>
+                </Link>
               </div>
-              <Link href={`/games/${game.id}`}>
-                <span className="inline-block w-full bg-blue-500 text-white px-4 py-2 rounded text-center hover:bg-blue-600 transition duration-300">
-                  Más información
-                </span>
-              </Link>
             </div>
-          </div>
-        ))}
-      </div>
-    )}
+          ))}
+        </div>
+      ) : (
+        <p>No se encontraron juegos.</p>
+      )}
     </div>
   );
 }

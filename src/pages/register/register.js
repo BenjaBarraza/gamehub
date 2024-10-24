@@ -1,11 +1,5 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import { Input } from "../../components/ui/Input";
-import { Button } from "../../components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../components/ui/card";
-import { Label } from "../../components/ui/label";
-import { Checkbox } from "../../components/ui/checkbox";
-import Link from "next/link";
 import Image from "next/image";
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 
@@ -20,21 +14,38 @@ export default function RegisterPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  
+
     if (username && email && password && confirmPassword && password === confirmPassword) {
-      const newUser = { name: username, email, password };
-  
+      const newUser = { 
+        name: username, 
+        email, 
+        password, 
+        avatar: '', 
+        joinDate: new Date().toLocaleDateString(), 
+        gamesReviewed: 0, 
+        followers: 0, 
+        following: 0 
+      };
+
       const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
+      
+      // Verificar si el correo ya está registrado
+      if (storedUsers.some((user) => user.email === email)) {
+        alert("Este correo ya está registrado.");
+        return;
+      }
+
       storedUsers.push(newUser);
       localStorage.setItem("users", JSON.stringify(storedUsers));
-    
+
       console.log("Usuario registrado:", newUser);
+      alert('Usuario registrado exitosamente. Ahora puedes iniciar sesión.');
       router.push('/register/login');
     } else {
       alert("Por favor, completa todos los campos correctamente.");
     }
   };
-  
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -47,11 +58,14 @@ export default function RegisterPage() {
     <div className="flex items-center justify-center min-h-screen bg-white">
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
         <div className="text-center mb-4">
-          <div className="flex justify-center mb-4"><Image src="/logo.ico" alt="GameHub Logo" width={128} height={128} />
-        </div>
+          <div className="flex justify-center mb-4">
+            <Image src="/logo.ico" alt="GameHub Logo" width={128} height={128} />
+          </div>
         </div>
         <h2 className="text-2xl font-bold text-center mb-6">Join GameHub</h2>
-        <p className="text-center text-gray-600 mb-4">Create an account and start your gaming journey</p>
+        <p className="text-center text-gray-600 mb-4">
+          Create an account and start your gaming journey
+        </p>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-gray-700 mb-2" htmlFor="username">Username</label>
@@ -121,7 +135,9 @@ export default function RegisterPage() {
           </div>
           <div className="flex items-center mb-4">
             <input type="checkbox" className="form-checkbox" required />
-            <span className="ml-2 text-gray-700">I agree to the <a href="#" className="text-blue-600 hover:underline">terms and conditions</a></span>
+            <span className="ml-2 text-gray-700">
+              I agree to the <a href="#" className="text-blue-600 hover:underline">terms and conditions</a>
+            </span>
           </div>
           <button 
             type="submit" 
@@ -131,7 +147,9 @@ export default function RegisterPage() {
         </form>
         <div className="text-center mt-4">
           <span className="text-gray-600">Already have an account? </span>
-          <button onClick={() => router.push('/register/login')} className="text-blue-500 hover:underline">Sign in</button>
+          <button onClick={() => router.push('/register/login')} className="text-blue-500 hover:underline">
+            Sign in
+          </button>
         </div>
       </div>
     </div>

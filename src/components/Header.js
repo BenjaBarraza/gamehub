@@ -65,7 +65,6 @@ export default function Header() {
           </Link>
         </div>
 
-       
         {/* Botón Menú y opciones */}
         <div className="flex items-center space-x-4">
           {/* Menú hamburguesa para pantallas pequeñas */}
@@ -90,46 +89,50 @@ export default function Header() {
 
           {/* Mostrar información si el usuario está logueado */}
           {user ? (
-            <div className="relative" ref={userMenuRef}>
-              <button 
-                onClick={toggleMenu} 
-                className="flex items-center space-x-2 bg-white text-gray-700 px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition-shadow"
-              >
+          <div className="relative" ref={userMenuRef}>
+            <button 
+              onClick={toggleMenu} 
+              className="flex items-center space-x-2 bg-white text-gray-700 px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition-shadow"
+            >
+              <User className="h-5 w-5 text-gray-700" />
+              <span>{user.name}</span>
+            </button>
+            {menuOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg">
+                <Link href="/Userprofile" className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100">
+                  Ver Perfil
+                </Link>
+                <button
+                  onClick={() => {
+                    logout();
+                    setMenuOpen(false);
+                    router.push("/");
+                  }}
+                  className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
+                >
+                  Cerrar sesión
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <>
+            <Link href="/register/register" passHref>
+              <button className="hidden md:flex items-center space-x-2 bg-white text-gray-700 px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition-shadow">
                 <User className="h-5 w-5 text-gray-700" />
-                <span>{user.name}</span>
+                <span>Registrarse</span>
               </button>
-              {menuOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg">
-                  <button
-                    onClick={() => {
-                      logout();
-                      setMenuOpen(false);
-                      router.push("/");
-                    }}
-                    className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
-                  >
-                    Cerrar sesión
-                  </button>
-                </div>
-              )}
-            </div>
-          ) : (
-            <>
-              <Link href="/register/register" passHref>
-                <button className="hidden md:flex items-center space-x-2 bg-white text-gray-700 px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition-shadow">
-                  <User className="h-5 w-5 text-gray-700" />
-                  <span>Registrarse</span>
-                </button>
-              </Link>
+            </Link>
 
-              <Link href="/register/login" passHref>
-                <button className="hidden md:flex items-center space-x-2 bg-white text-gray-700 px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition-shadow">
-                  <User className="h-5 w-5 text-gray-700" />
-                  <span>Acceso</span>
-                </button>
-              </Link>
-            </>
-          )}
+            <Link href="/register/login" passHref>
+              <button className="hidden md:flex items-center space-x-2 bg-white text-gray-700 px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition-shadow">
+                <User className="h-5 w-5 text-gray-700" />
+                <span>Acceso</span>
+              </button>
+            </Link>
+          </>
+        )}
+
         </div>
       </div>
 
@@ -163,7 +166,6 @@ export default function Header() {
             Reseñas
           </Link>
 
-          {/* Botones de "Registrarse" y "Acceso" visibles en el menú hamburguesa */}
           {!user && (
             <>
               <Link href="/register/register" passHref>
