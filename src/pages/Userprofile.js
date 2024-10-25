@@ -1,30 +1,28 @@
 import Image from 'next/image';
-import { Edit3 } from 'lucide-react'; // Importar ícono de lápiz
+import { Edit3, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
-import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 import { useRouter } from 'next/router';
 
 export default function UserProfile() {
   const { user, login, logout } = useAuth();
   const [avatar, setAvatar] = useState('');
+  const [activeSection, setActiveSection] = useState('favorites');
   const [password, setPassword] = useState('');
-  const [activeTab, setActiveTab] = useState('favorites');
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    if (user?.avatar) {
+    const storedAvatar = localStorage.getItem(`avatar_${user?.username}`);
+    if (storedAvatar) {
+      setAvatar(storedAvatar);
+    } else if (user?.avatar) {
       setAvatar(user.avatar);
     }
   }, [user]);
-
-  const handleTabChange = (value) => {
-    setActiveTab(value);
-  };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -42,16 +40,9 @@ export default function UserProfile() {
     }
   };
 
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
-
-  const handleSavePassword = () => {
-    if (password.length >= 6) {
-      alert('Contraseña actualizada correctamente');
-    } else {
-      alert('La contraseña debe tener al menos 6 caracteres');
-    }
+  const handleLogout = () => {
+    logout();
+    router.push('/');
   };
 
   const handleDeleteAccount = () => {
@@ -60,85 +51,34 @@ export default function UserProfile() {
       const updatedUsers = users.filter(u => u.email !== user.email);
       localStorage.setItem('users', JSON.stringify(updatedUsers));
 
+      localStorage.removeItem(`avatar_${user.username}`);
+
       logout();
       router.push('/');
       alert('Cuenta eliminada');
     }
   };
 
-  if (!user) {
-    return <p>Cargando...</p>;
-  }
+  const handleSavePassword = (newPassword) => {
+    if (newPassword.length >= 6) {
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+      const updatedUsers = users.map((u) =>
+        u.email === user.email ? { ...u, password: newPassword } : u
+      );
+      localStorage.setItem('users', JSON.stringify(updatedUsers));
+      login({ ...user, password: newPassword });
+      alert('Contraseña actualizada correctamente');
+    } else {
+      alert('La contraseña debe tener al menos 6 caracteres');
+    }
+  };
 
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <Card className="pt-6">
-        <CardContent className="relative">
-          <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-            <div className="relative">
-              {/* Aumentamos el tamaño del avatar */}
-              <Avatar className="w-40 h-40 border border-gray-500">
-                {avatar ? (
-                  <AvatarImage src={avatar} alt={user.name || 'Avatar'} />
-                ) : (
-                  <AvatarFallback>{user.name?.charAt(0) || '?'}</AvatarFallback>
-                )}
-              </Avatar>
+  const toggleShowPassword = () => setShowPassword((prev) => !prev);
 
-              {/* Ícono de lápiz más pequeño y alineado */}
-              <label
-                htmlFor="avatar-upload"
-                className="absolute -bottom-2 right-2 cursor-pointer bg-gray-200 dark:bg-gray-700 p-2 rounded-full hover:bg-gray-300 transition"
-                style={{ width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-              >
-                <Edit3 className="w-4 h-4 text-gray-600 dark:text-white" />
-              </label>
-
-              <input
-                id="avatar-upload"
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="hidden"
-              />
-            </div>
-            <div className="text-center md:text-left">
-              <h1 className="text-3xl font-bold mb-1">{user.name || 'Usuario'}</h1>
-              <p className="text-gray-400 mb-2">@{user.username}</p>
-              <p className="mb-4 text-gray-500">{user.bio || 'Sin biografía disponible'}</p>
-              <div className="flex flex-wrap justify-center md:justify-start gap-4 mb-4">
-                <Badge className="bg-gray-100 text-black dark:bg-gray-700 dark:text-white">
-                  Miembro desde {user.joinDate || 'Fecha desconocida'}
-                </Badge>
-                <Badge className="bg-gray-100 text-black dark:bg-gray-700 dark:text-white">
-                  {user.gamesReviewed || 0} juegos reseñados
-                </Badge>
-                <Badge className="bg-gray-100 text-black dark:bg-gray-700 dark:text-white">
-                  {user.followers || 0} seguidores
-                </Badge>
-                <Badge className="bg-gray-100 text-black dark:bg-gray-700 dark:text-white">
-                  Siguiendo a {user.following || 0}
-                </Badge>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Tabs defaultValue="settings" value={activeTab} onValueChange={handleTabChange} className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger key="favorites" value="favorites">
-            Juegos Favoritos
-          </TabsTrigger>
-          <TabsTrigger key="reviews" value="reviews">
-            Reseñas Recientes
-          </TabsTrigger>
-          <TabsTrigger key="settings" value="settings">
-            Configuración
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent key="favorites-content" value="favorites" className={activeTab === 'favorites' ? '' : 'hidden'}>
+  const renderSection = () => {
+    switch (activeSection) {
+      case 'favorites':
+        return (
           <Card className="mb-6">
             <CardHeader>
               <CardTitle>Juegos Favoritos</CardTitle>
@@ -147,9 +87,9 @@ export default function UserProfile() {
               <p>Aquí estarán los juegos favoritos del usuario.</p>
             </CardContent>
           </Card>
-        </TabsContent>
-
-        <TabsContent key="reviews-content" value="reviews" className={activeTab === 'reviews' ? '' : 'hidden'}>
+        );
+      case 'reviews':
+        return (
           <Card className="mb-6">
             <CardHeader>
               <CardTitle>Reseñas Recientes</CardTitle>
@@ -158,41 +98,129 @@ export default function UserProfile() {
               <p>Aquí estarán las reseñas recientes del usuario.</p>
             </CardContent>
           </Card>
-        </TabsContent>
-
-        <TabsContent key="settings-content" value="settings" className={activeTab === 'settings' ? '' : 'hidden'}>
+        );
+      case 'settings':
+        return (
+          <>
+            <Card className="mb-6">
+              <CardHeader>
+                <CardTitle>Cambiar Imagen de Perfil</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex justify-center items-center">
+                  <label
+                    htmlFor="avatar-upload"
+                    className="cursor-pointer bg-gray-200 p-2 rounded-full hover:bg-gray-300 transition"
+                  >
+                    <Edit3 className="w-5 h-5 text-black" />
+                  </label>
+                  <input
+                    id="avatar-upload"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="hidden"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="mb-6">
+              <CardHeader>
+                <CardTitle>Cambiar Contraseña</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-col items-center">
+                  <div className="relative w-full">
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder="Nueva contraseña"
+                      className="mb-4 px-4 py-2 border rounded-lg w-full"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <button
+                      type="button"
+                      onClick={toggleShowPassword}
+                      className="absolute right-2 top-2 text-gray-600"
+                    >
+                      {showPassword ? <EyeOff /> : <Eye />}
+                    </button>
+                  </div>
+                  <Button className="w-full" onClick={() => handleSavePassword(password)}>
+                    Guardar Contraseña
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="mb-6">
+              <CardHeader>
+                <CardTitle>Eliminar Cuenta</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-col items-center">
+                  <Button
+                    className="bg-red-600 hover:bg-red-500 text-white w-full"
+                    onClick={handleDeleteAccount}
+                  >
+                    Eliminar Cuenta
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </>
+        );
+      case 'data':
+        return (
           <Card className="mb-6">
             <CardHeader>
-              <CardTitle>Cambiar Contraseña</CardTitle>
+              <CardTitle>Mis Datos</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex flex-col items-center">
-                <input
-                  type="password"
-                  value={password}
-                  onChange={handlePasswordChange}
-                  placeholder="Nueva contraseña"
-                  className="mb-4 px-4 py-2 border rounded-lg"
-                />
-                <Button onClick={handleSavePassword}>Guardar Contraseña</Button>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <p className="font-semibold">Nombre y Apellidos</p>
+                  <p>{user?.name || 'No disponible'}</p>
+                </div>
+                <div>
+                  <p className="font-semibold">Correo Electrónico</p>
+                  <p>{user?.email || 'No disponible'}</p>
+                </div>
               </div>
             </CardContent>
           </Card>
+        );
+      default:
+        return null;
+    }
+  };
 
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>Eliminar Cuenta</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-col items-center">
-                <Button onClick={handleDeleteAccount} className="bg-red-500 hover:bg-red-700">
-                  Eliminar Cuenta
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+  return (
+    <div className="container mx-auto px-4 py-8 flex flex-col lg:flex-row gap-6">
+      <div className="w-full lg:w-1/4 bg-white text-black rounded-lg shadow-md p-6">
+        <div className="flex items-center gap-4 mb-6">
+          <Avatar className="w-24 h-24 lg:w-16 lg:h-16 border border-gray-500">
+            {avatar ? (
+              <AvatarImage src={avatar} alt={user?.name || 'Avatar'} />
+            ) : (
+              <AvatarFallback>{user?.name?.charAt(0) || '?'}</AvatarFallback>
+            )}
+          </Avatar>
+          <div>
+            <h1 className="text-xl font-bold">{user?.name || 'Usuario'}</h1>
+            <p className="text-gray-400">@{user?.username || 'N/A'}</p>
+          </div>
+        </div>
+        <div className="flex flex-col items-start space-y-4">
+          <Button className="w-full" onClick={() => setActiveSection('favorites')}>Juegos Favoritos</Button>
+          <Button className="w-full" onClick={() => setActiveSection('reviews')}>Reseñas Recientes</Button>
+          <Button className="w-full" onClick={() => setActiveSection('settings')}>Configuración</Button>
+          <Button className="w-full" onClick={() => setActiveSection('data')}>Mis Datos</Button>
+          <Button className="w-full bg-red-600 text-white" onClick={handleLogout}>Cerrar Sesión</Button>
+        </div>
+      </div>
+      <div className="w-full lg:w-3/4 bg-white rounded-lg shadow-md p-6">
+        {renderSection()}
+      </div>
     </div>
   );
 }

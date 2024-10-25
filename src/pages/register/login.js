@@ -17,22 +17,20 @@ export default function LoginPage() {
   const router = useRouter();
   const { login } = useAuth();
 
-  const handleSubmit = (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
-  
-    const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
-    const foundUser = storedUsers.find(user => user.email === email && user.password === password);
-  
+
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    const foundUser = users.find((u) => u.email === email && u.password === password);
+
     if (foundUser) {
-      login(foundUser);
-      console.log("Inicio de sesión exitoso:", foundUser);
-      router.push('/');
+      login(foundUser); // Establecer la sesión del usuario
+      router.push('/'); // Redirigir al perfil
     } else {
-      console.log("Los datos ingresados no coinciden con ningún usuario registrado.");
-      alert("Correo o contraseña incorrectos. Por favor, inténtalo de nuevo.");
+      alert('Correo o contraseña incorrectos.');
     }
   };
-  
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -47,7 +45,9 @@ export default function LoginPage() {
         </div>
         <h2 className="text-2xl font-bold text-center mb-6">Login to GameHub</h2>
         <p className="text-center text-gray-600 mb-4">Enter your email and password to access your account</p>
-        <form onSubmit={handleSubmit}>
+        
+        {/* Corregido el onSubmit */}
+        <form onSubmit={handleLogin}>
           <div className="mb-4">
             <label className="block text-gray-700 mb-2" htmlFor="email">Email</label>
             <input 
@@ -93,6 +93,7 @@ export default function LoginPage() {
             Sign In
           </button>
         </form>
+        
         <div className="text-center mt-4">
           <button 
             onClick={() => router.push('/register/forgotpassword')} 
@@ -100,14 +101,22 @@ export default function LoginPage() {
             Forgot your password?
           </button>
         </div>
+        
         <div className="text-center mt-2">
           <span className="text-gray-600">Don&apos;t have an account? </span>
-          <button onClick={() => router.push('/register/register')} className="text-blue-500 hover:underline" > 
-            Sign up </button>
+          <button 
+            onClick={() => router.push('/register/register')} 
+            className="text-blue-500 hover:underline">
+            Sign up
+          </button>
         </div>
+        
         <div className="text-center mt-4">
-          <button onClick={() => router.push('/')} className="text-blue-500 hover:underline" > 
-            Home </button>
+          <button 
+            onClick={() => router.push('/')} 
+            className="text-blue-500 hover:underline">
+            Home
+          </button>
         </div>
       </div>
     </div>
